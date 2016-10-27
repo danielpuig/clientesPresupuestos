@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.8.0_101" class="java.beans.XMLDecoder">
+ <object class="clientespresupuestos.ListaClientes" id="ListaClientes0">
+  <void property="lista">
+   <void method="add">
+    <object class="clientespresupuestos.Cliente">
+     <void property="apellidos">
+      <string>d</string>
+     </void>
+     <void property="nombre">
+      <string>d</string>
+     </void>
+     <void property="telefono">
+      <string>5</string>
+     </void>
+     <void property="vip">
+      <boolean>true</boolean>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="clientespresupuestos.Cliente">
+     <void property="apellidos">
+      <string>a</string>
+     </void>
+     <void property="lista">
+      <object class="clientespresupuestos.ListaPresupuestos"/>
+     </void>
+     <void property="nombre">
+      <string>a</string>
+     </void>
+     <void property="telefono">
+      <string>8</string>
+     </void>
+     <void property="vip">
+      <boolean>true</boolean>
+     </void>
+    </object>
+   </void>
+  </void>
+ </object>
+</java>
