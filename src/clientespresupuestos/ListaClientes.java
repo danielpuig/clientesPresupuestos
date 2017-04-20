@@ -19,6 +19,43 @@ public class ListaClientes implements Serializable {
     public ListaClientes() {
         lista = new ArrayList<>();
     }
+    
+    public void altaCliente(Cliente c) {
+        boolean exists = false;
+        for(Cliente clienteActual:lista) {
+            if(clienteActual.getTelefono().equalsIgnoreCase(c.getTelefono())) {
+                System.out.println("Ya hay un cliente con este telefono");
+                exists = true;
+            }
+        }
+        if(!exists) {
+            lista.add(c);
+        }
+        this.lista.add(c);
+    }
+    
+    public boolean clienteExists (String numero) {
+        boolean exists = false;
+        for(Cliente clienteActual:lista) {
+            if(clienteActual.getTelefono().equalsIgnoreCase(numero)) {
+                exists = true;
+            }
+        }
+        return exists;
+    }
+    
+    public Cliente getByNum(String numero) {
+        for(Cliente clienteActual:lista) {
+            if(clienteActual.getTelefono().equalsIgnoreCase(numero)) {
+                return clienteActual;
+            }
+        }
+        return null;
+    }
+    
+    public void removeCliente(Cliente c) {
+        lista.remove(c);
+    }
 
     public ArrayList<Cliente> getLista() {
         return lista;
@@ -26,10 +63,6 @@ public class ListaClientes implements Serializable {
 
     public void setLista(ArrayList<Cliente> lista) {
         this.lista = lista;
-    }
-
-    public void altaCliente(Cliente c) {
-        this.lista.add(c);
     }
 
 }

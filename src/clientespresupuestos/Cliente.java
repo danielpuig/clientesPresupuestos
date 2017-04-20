@@ -5,11 +5,15 @@
  */
 package clientespresupuestos;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author danielpuig
  */
-public class Cliente {
+public class Cliente implements Serializable {
     
     private String nombre;
     private String apellidos;
@@ -20,12 +24,12 @@ public class Cliente {
     public Cliente() {
     }
 
-    public Cliente(String nombre, String apellidos, String telefono, boolean vip, ListaPresupuestos lista) {
+    public Cliente(String nombre, String apellidos, String telefono, boolean vip) {
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.telefono = telefono;
         this.vip = vip;
-        this.lista = lista;
+        lista = new ListaPresupuestos();
     }
 
     public String getNombre() {
@@ -66,6 +70,11 @@ public class Cliente {
 
     public void setLista(ListaPresupuestos lista) {
         this.lista = lista;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" + "nombre=" + nombre + ", apellidos=" + apellidos + ", telefono=" + telefono + ", vip=" + vip + ", lista=" + lista + '}';
     }
     
 }

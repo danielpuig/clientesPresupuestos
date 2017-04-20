@@ -1,5 +1,6 @@
 package clientespresupuestos;
 
+import java.util.ArrayList;
 import tools.*;
 
 /**
@@ -9,22 +10,29 @@ import tools.*;
 public class ClientesPresupuestos {
 
     private static ListaClientes clientes;
-
-    private static Fichero miFichero;
+    private static ListaPresupuestos presupuestos;
+    private static Fichero ficheroClientes;
+    private static Fichero ficheroPresupuestos;
 
     public static void main(String[] args) {
-
-        miFichero = new Fichero("clientesPresupuestos.xml");
-
-        clientes = (ListaClientes) miFichero.leer();
-
-        if (clientes == null) {
+        
+        //---------------------------------
+        
+        ficheroClientes = new Fichero("ficheroClientes.xml");
+        ficheroPresupuestos = new Fichero("ficheroPresupuestos.xml");
+        
+        clientes = (ListaClientes) ficheroClientes.leer();
+        presupuestos = (ListaPresupuestos) ficheroPresupuestos.leer();
+        
+        if(clientes==null){
             clientes = new ListaClientes();
         }
         
-        Cliente b = new Cliente("d", "d", "5", true, null);
+        if(presupuestos==null){
+            presupuestos = new ListaPresupuestos();
+        }
         
-        clientes.altaCliente(b);
+        //---------------------------------
 
         int opc;
         do {
@@ -68,10 +76,6 @@ public class ClientesPresupuestos {
         System.out.println("8. Salir");
     }
 
-    private static void crearPresupuesto() {
-
-    }
-
     private static void altaCliente() {
         String nombre = cadenaNoVacia("Nombre: ");
         String apellidos = cadenaNoVacia("Apellidos: ");
@@ -88,33 +92,18 @@ public class ClientesPresupuestos {
                 System.out.println("Debes responder SI o NO");
             }
         } while (!respuesta.equalsIgnoreCase("SI") && !respuesta.equalsIgnoreCase("NO"));
-        ListaPresupuestos lista = new ListaPresupuestos();
 
-        Cliente c = new Cliente(nombre, apellidos, telefono, vip, lista);
-
-        if (comprobarCliente(telefono)) {
-            clientes.altaCliente(c);
-
-            miFichero.grabar(clientes);
-        } else {
-            System.out.println("Ya existe un cliente con ese numero de telefono.");
-        }
+        Cliente c = new Cliente(nombre, apellidos, telefono, vip);
+        
+        clientes.altaCliente(c);
+        ficheroClientes.grabar(clientes);
 
     }
+    
+    private static void altaPresupuesto() {
 
-    private static boolean comprobarCliente(String telf) {
-        boolean valid = true;
-        if (clientes.getLista() != null) {
-            for (Cliente clienteActual : clientes.getLista()) {
-                if (clienteActual.getTelefono().equals(telf)) {
-                    valid = false;
-                    break;
-                }
-            }
-        }
-        return valid;
     }
-
+    
     private static String cadenaNoVacia(String msg) {
         String cadena;
         do {
