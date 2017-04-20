@@ -31,7 +31,17 @@ public class ListaClientes implements Serializable {
         if(!exists) {
             lista.add(c);
         }
-        this.lista.add(c);
+    }
+    
+    public boolean existsPresupuesto(int numPresupuesto){
+        boolean exists = false;
+        for(Cliente clienteActual: lista){
+            if(clienteActual.getLista().existsPresupuestoNum(numPresupuesto)){
+                exists = true;
+                break;
+            }
+        }
+        return exists;
     }
     
     public boolean clienteExists (String numero) {

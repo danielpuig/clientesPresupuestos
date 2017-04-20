@@ -43,6 +43,7 @@ public class ClientesPresupuestos {
                     altaCliente();
                     break;
                 case 2:
+                    altaPresupuesto();
                     break;
                 case 3:
                     break;
@@ -100,8 +101,83 @@ public class ClientesPresupuestos {
 
     }
     
-    private static void altaPresupuesto() {
-
+    public static void altaPresupuesto(){
+        String clienteNum = cadenaNoVacia("Introduce el número del cliente");
+        boolean exists = clientes.clienteExists(clienteNum);
+        
+        Cliente cliente = clientes.getByNum(clienteNum);
+        
+        if(exists){
+            //System.out.println("Alta pre");
+            boolean existsNumPresupuesto;
+            int numPresupues=0;
+            do{
+            //------------------------- reemplazar --------------------
+            //Para buscar directamente en el fichero cliente
+            // 
+            /*
+            for(Cliente asd:listaClientes.getLista()){
+                for(Presupuesto prep: asd.getListaPresupuestos().getLista()){
+                    //check si existe ese numero de presupuesto y gestinar...
+                    //De esta forma se evita duplicar
+                }
+            }
+            */
+            numPresupues = tools.InputData.pedirEntero("Introduce el número del presupuesto");
+            existsNumPresupuesto = clientes.existsPresupuesto(numPresupues);
+            if(existsNumPresupuesto){
+                System.out.println("Ya existe un presupuesto registrado bajo ese número");
+            }
+            }while(existsNumPresupuesto);
+            
+            String concepto = cadenaNoVacia("Introduce el concepto");
+            double presupuestoNeto = tools.InputData.pedirDouble("Introduce el monto neto del presupuesto");
+            boolean validPresupuesto = false;
+            boolean isPendiente = false;
+            String estado;
+            
+            do{
+                estado = cadenaNoVacia("Estado del presupuesto: [aceptado] [pendiente] [rechazado]");
+                for(String x:estadoPresupuesto){
+                    if(x.equalsIgnoreCase(estado)){
+                        validPresupuesto = true;
+                    }
+                }
+                if(!validPresupuesto){
+                    
+                    isPendiente = preguntar("No ha colocado un estado válido. ¿Dejar como pendiente?");
+                    if(isPendiente){
+                        estado = "pendiente";
+                    }
+                }
+            }while(!validPresupuesto && !isPendiente);
+            
+            //TODO !!!
+            //No está dando de alta los presupuestos
+            //Revisar
+            //El problema era que actualizaba sólamente el fichero que no debería crearse, 
+            //en lugar de actualizar las listas desde los cliente
+            
+            Presupuesto presupuesto = new Presupuesto(numPresupues, concepto, presupuestoNeto, estado);
+            //Es innecesario agregar a la lista de presupuestos del fichero duplicado...
+            //listaPresupuestos.addPresupuesto(presupuesto);
+            //cliente.setListaPresupuestos(listaPresupuestos);
+            cliente.getLista().addPresupuesto(presupuesto);
+            ficheroClientes.grabar(clientes);
+            //No hace falta grabar este fichero
+            //ficheroPresupuestos.grabar(listaPresupuestos);
+            
+        }else{
+            boolean createNewCliente;
+            createNewCliente = preguntar("El cliente no existe, desea darlo de alta?");
+            if(createNewCliente){
+                System.out.println("Redirigiendo a alta de nuevo cliente...");
+                altaCliente();
+                
+            }else{
+                //...
+            }
+        }
     }
     
     private static String cadenaNoVacia(String msg) {
@@ -113,6 +189,17 @@ public class ClientesPresupuestos {
             }
         } while (cadena.equals(""));
         return cadena;
+    }
+    
+    public static boolean preguntar(String mensaje){
+        String aws;
+        do{   
+        aws = cadenaNoVacia(mensaje+" [si][no]");
+        if(!aws.equalsIgnoreCase("si")&&!aws.equalsIgnoreCase("no")){
+            System.out.println("Por favor, introduce un valor valido");
+        }
+        }while(!aws.equalsIgnoreCase("si")&&!aws.equalsIgnoreCase("no"));
+        return aws.equals("si");
     }
 
 }

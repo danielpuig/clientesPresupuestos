@@ -37,6 +37,38 @@
      </void>
     </object>
    </void>
+   <void method="add">
+    <object class="clientespresupuestos.Cliente">
+     <void property="apellidos">
+      <string>d</string>
+     </void>
+     <void property="nombre">
+      <string>d</string>
+     </void>
+     <void property="telefono">
+      <string>5</string>
+     </void>
+     <void property="vip">
+      <boolean>true</boolean>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="clientespresupuestos.Cliente">
+     <void property="apellidos">
+      <string>villardel</string>
+     </void>
+     <void property="lista">
+      <object class="clientespresupuestos.ListaPresupuestos"/>
+     </void>
+     <void property="nombre">
+      <string>xavi</string>
+     </void>
+     <void property="telefono">
+      <string>1</string>
+     </void>
+    </object>
+   </void>
   </void>
  </object>
 </java>
