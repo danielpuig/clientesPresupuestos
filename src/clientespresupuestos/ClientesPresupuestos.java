@@ -13,6 +13,7 @@ public class ClientesPresupuestos {
     private static ListaPresupuestos presupuestos;
     private static Fichero ficheroClientes;
     private static Fichero ficheroPresupuestos;
+    private static String[] estadoPresupuesto = {"aceptado","pendiente","rechazado"};
 
     public static void main(String[] args) {
         
@@ -46,6 +47,7 @@ public class ClientesPresupuestos {
                     altaPresupuesto();
                     break;
                 case 3:
+                    getPresupuestoByEstado("pendiente");
                     break;
                 case 4:
                     break;
@@ -108,21 +110,9 @@ public class ClientesPresupuestos {
         Cliente cliente = clientes.getByNum(clienteNum);
         
         if(exists){
-            //System.out.println("Alta pre");
             boolean existsNumPresupuesto;
             int numPresupues=0;
             do{
-            //------------------------- reemplazar --------------------
-            //Para buscar directamente en el fichero cliente
-            // 
-            /*
-            for(Cliente asd:listaClientes.getLista()){
-                for(Presupuesto prep: asd.getListaPresupuestos().getLista()){
-                    //check si existe ese numero de presupuesto y gestinar...
-                    //De esta forma se evita duplicar
-                }
-            }
-            */
             numPresupues = tools.InputData.pedirEntero("Introduce el número del presupuesto");
             existsNumPresupuesto = clientes.existsPresupuesto(numPresupues);
             if(existsNumPresupuesto){
@@ -131,41 +121,30 @@ public class ClientesPresupuestos {
             }while(existsNumPresupuesto);
             
             String concepto = cadenaNoVacia("Introduce el concepto");
-            double presupuestoNeto = tools.InputData.pedirDouble("Introduce el monto neto del presupuesto");
-            boolean validPresupuesto = false;
-            boolean isPendiente = false;
+            double presupuestoNeto = tools.InputData.pedirDouble("Introduce el total del presupuesto");
+            boolean valid = false;
+            boolean pendiente = false;
             String estado;
             
             do{
-                estado = cadenaNoVacia("Estado del presupuesto: [aceptado] [pendiente] [rechazado]");
+                estado = cadenaNoVacia("Estado del presupuesto: (aceptado/pendiente/rechazado)");
                 for(String x:estadoPresupuesto){
                     if(x.equalsIgnoreCase(estado)){
-                        validPresupuesto = true;
+                        valid = true;
                     }
                 }
-                if(!validPresupuesto){
+                if(!valid){
                     
-                    isPendiente = preguntar("No ha colocado un estado válido. ¿Dejar como pendiente?");
-                    if(isPendiente){
+                    pendiente = preguntar("No ha colocado un estado válido. ¿Dejar como pendiente?");
+                    if(pendiente){
                         estado = "pendiente";
                     }
                 }
-            }while(!validPresupuesto && !isPendiente);
-            
-            //TODO !!!
-            //No está dando de alta los presupuestos
-            //Revisar
-            //El problema era que actualizaba sólamente el fichero que no debería crearse, 
-            //en lugar de actualizar las listas desde los cliente
+            }while(!valid && !pendiente);
             
             Presupuesto presupuesto = new Presupuesto(numPresupues, concepto, presupuestoNeto, estado);
-            //Es innecesario agregar a la lista de presupuestos del fichero duplicado...
-            //listaPresupuestos.addPresupuesto(presupuesto);
-            //cliente.setListaPresupuestos(listaPresupuestos);
             cliente.getLista().addPresupuesto(presupuesto);
             ficheroClientes.grabar(clientes);
-            //No hace falta grabar este fichero
-            //ficheroPresupuestos.grabar(listaPresupuestos);
             
         }else{
             boolean createNewCliente;
@@ -175,7 +154,7 @@ public class ClientesPresupuestos {
                 altaCliente();
                 
             }else{
-                //...
+                
             }
         }
     }
@@ -192,14 +171,36 @@ public class ClientesPresupuestos {
     }
     
     public static boolean preguntar(String mensaje){
-        String aws;
+        String q;
         do{   
-        aws = cadenaNoVacia(mensaje+" [si][no]");
-        if(!aws.equalsIgnoreCase("si")&&!aws.equalsIgnoreCase("no")){
+        q = cadenaNoVacia(mensaje + " (si/no)");
+        if(!q.equalsIgnoreCase("si")&&!q.equalsIgnoreCase("no")){
             System.out.println("Por favor, introduce un valor valido");
         }
-        }while(!aws.equalsIgnoreCase("si")&&!aws.equalsIgnoreCase("no"));
-        return aws.equals("si");
+        }while(!q.equalsIgnoreCase("si")&&!q.equalsIgnoreCase("no"));
+        return q.equals("si");
+    }
+
+    private static void getPresupuestoByEstado(String estado) {
+        System.out.println("\tLista de presupuestos por estado: "+estado);
+        ArrayList<Presupuesto> listaPresupuestosPendientes;
+        for(Cliente clienteActual: clientes.getLista()){
+            System.out.println("Presupuestos del cliente: "+clienteActual.getNombre()+" "+clienteActual.getApellidos());
+            
+            listaPresupuestosPendientes = clienteActual.getLista().getPresupuestoByEstado(estado);
+            if(!listaPresupuestosPendientes.isEmpty()){
+                for(Presupuesto presupuestoActual: listaPresupuestosPendientes){
+                    System.out.println("Nº:\t\t\t"+presupuestoActual.getNumPres());
+                    System.out.println("Concepto:\t\t"+presupuestoActual.getConcepto());
+                    System.out.println("Presupuesto neto:\t"+presupuestoActual.getPrecioFinal()+"€");
+                    System.out.println("Presupuesto final:\t"+presupuestoActual.calcPrecioFinal(clienteActual)+"€");
+                }
+                System.out.println("---------------------");
+                
+            }else{
+                System.out.println("La lista de presupuestos de este cliente está vacía según el criterio \""+estado+"\"");
+            }
+        }
     }
 
 }
