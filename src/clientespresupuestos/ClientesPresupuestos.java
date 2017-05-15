@@ -50,6 +50,7 @@ public class ClientesPresupuestos {
                     getPresupuestoByEstado("pendiente");
                     break;
                 case 4:
+                    getPresupuestoByTelf();
                     break;
                 case 5:
                     break;
@@ -170,6 +171,19 @@ public class ClientesPresupuestos {
         return cadena;
     }
     
+    @SuppressWarnings("empty-statement")
+    public static String stringNoVacio(String mensaje){
+        String getString;
+        do{
+            getString = tools.InputData.pedirCadena(mensaje);
+            if(getString.equals("")){
+                System.out.println("Por favor, introduce un valor valido");
+            };
+        }while(getString.equals(""));
+        
+        return getString;
+    }
+    
     public static boolean preguntar(String mensaje){
         String q;
         do{   
@@ -200,6 +214,27 @@ public class ClientesPresupuestos {
             }else{
                 System.out.println("La lista de presupuestos de este cliente está vacía según el criterio \""+estado+"\"");
             }
+        }
+    }
+
+    private static void getPresupuestoByTelf() {
+        String clienteNum = stringNoVacio("Introduce el telefono del cliente");
+        boolean exists = clientes.clienteExists(clienteNum);
+        Cliente cliente = clientes.getByNum(clienteNum);
+        if(exists){
+        System.out.println("Presupuestos del cliente: "+cliente.getNombre()+" "+cliente.getApellidos());
+            if(!cliente.getLista().getLista().isEmpty()){
+                for(Presupuesto presupuestoActual: cliente.getLista().getLista()){
+                    System.out.println("Nº:\t\t\t"+presupuestoActual.getNumPres());
+                    System.out.println("Concepto:\t\t"+presupuestoActual.getConcepto());
+                    System.out.println("Presupuesto neto:\t"+presupuestoActual.getPrecioFinal()+"€");
+                    System.out.println("Presupuesto final:\t"+presupuestoActual.calcPrecioFinal(cliente)+"€");
+                }
+            }else{
+                System.out.println("La lista de presupuestos del cliente: "+cliente.getNombre()+" "+cliente.getApellidos()+" está vacía");
+            }
+        }else{
+            System.out.println("El cliente no existe.");
         }
     }
 
