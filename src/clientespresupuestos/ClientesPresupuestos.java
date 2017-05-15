@@ -53,8 +53,10 @@ public class ClientesPresupuestos {
                     getPresupuestoByTelf();
                     break;
                 case 5:
+                    getPresupuestoByEstado("rechazado");
                     break;
                 case 6:
+                    mostrarClientes();
                     break;
                 case 7:
                     break;
@@ -235,6 +237,22 @@ public class ClientesPresupuestos {
             }
         }else{
             System.out.println("El cliente no existe.");
+        }
+    }
+
+    private static void mostrarClientes() {
+        for(Cliente clienteActual: clientes.getLista()){
+            System.out.println("Nombre:\t\t\t"+clienteActual.getNombre());
+            System.out.println("Apellido:\t\t"+clienteActual.getApellidos());
+            System.out.println("Telefono:\t\t"+clienteActual.getTelefono());
+            String vipString = clienteActual.isVip() ? "Sí" : "No";
+            System.out.println("VIP:\t\t\t"+vipString);
+            int totalPresupuestos=0;
+            for(Presupuesto countPresupuesto: clienteActual.getLista().getLista()){
+                totalPresupuestos++;
+            }
+            System.out.println("Nº de presupuestos:\t"+totalPresupuestos);
+            System.out.println("-------------------------------------");
         }
     }
 
